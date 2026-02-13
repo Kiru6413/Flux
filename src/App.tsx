@@ -1,5 +1,3 @@
-
-import * as React from "react"
 import { useState, useMemo, useEffect } from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
@@ -65,12 +63,13 @@ export default function App() {
 
   const filteredInvoices = useMemo(() => {
     return invoices.filter((invoice) => {
-      const matchesSearch = 
-        searchQuery === "" ||
-        invoice.buyer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        invoice.seller.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        invoice.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase())
-      
+      const matchesSearch =
+  searchQuery === "" ||
+  Object.values(invoice).some((value) =>
+    typeof value === "string"&&
+    value.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
       let matchesDate = true
       if (date?.from && date?.to) {
         const processedDate = new Date(invoice.processedDate)
